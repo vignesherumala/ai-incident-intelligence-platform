@@ -40,4 +40,4 @@ os.makedirs("models", exist_ok=True)
 joblib.dump(category_model, "models/incident_classifier.pkl")
 joblib.dump(severity_model, "models/severity_model.pkl")
 
-print("✅ AI models trained and saved successfully")
+print("✅ AI models trained and saved successfully...")
