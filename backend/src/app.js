@@ -9,4 +9,5 @@ app.use(express.json());
 
 app.use("/api/incidents", incidentRoutes);
 
+
 export default app;
