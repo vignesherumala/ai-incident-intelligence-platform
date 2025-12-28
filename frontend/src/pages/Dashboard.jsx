@@ -1,4 +1,8 @@
 import { useEffect, useState } from "react";
+import SeverityPieChart from "../components/charts/SeverityPieChart";
+import TypeBarChart from "../components/charts/TypeBarChart";
+import TrendLineChart from "../components/charts/TrendLineChart";
+
 import axios from "axios";
 
 export default function Dashboard() {
@@ -13,19 +17,20 @@ export default function Dashboard() {
   if (!data) return <p>Loading...</p>;
 
   return (
-    <div>
-      <h1>Incident Analytics Dashboard</h1>
-      <p>Total Incidents: {data.totalIncidents}</p>
+   <div>
+  <h1>Incident Analytics Dashboard</h1>
 
-      <h3>Severity Breakdown</h3>
-      {data.bySeverity.map(s => (
-        <p key={s._id}>{s._id}: {s.count}</p>
-      ))}
+  <p>Total Incidents: {data.totalIncidents}</p>
 
-      <h3>Incident Types</h3>
-      {data.byType.map(t => (
-        <p key={t._id}>{t._id}: {t.count}</p>
-      ))}
-    </div>
+  <h3>Severity Distribution</h3>
+  <SeverityPieChart data={data.bySeverity} />
+
+  <h3>Incident Types</h3>
+  <TypeBarChart data={data.byType} />
+
+  <h3>Incident Trend</h3>
+  <TrendLineChart data={data.dailyTrend} />
+</div>
+
   );
 }
