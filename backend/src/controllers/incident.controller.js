@@ -1,22 +1,36 @@
-import Incident from "../models/Incident.js";
 import { classifyIncident } from "../intelligence/classifier.js";
 import { predictSeverity } from "../intelligence/severityPredictor.js";
 import { suggestRootCause } from "../intelligence/rootCauseEngine.js";
+import { suggestResolution } from "../intelligence/resolutionEngine.js";
+import { findSimilarIncidents } from "../intelligence/similarityEngine.js";
+import Incident from "../models/Incident.js";
 
 export const createIncident = async (req, res) => {
   try {
     const incidentData = req.body;
 
-    // 🔥 AI Intelligence
+    // AI Processing
     const type = classifyIncident(incidentData);
     const severity = predictSeverity(incidentData);
     const rootCause = suggestRootCause(type);
+
+    const pastIncidents = await Incident.find();
+    const similarIncidents = findSimilarIncidents(
+      { type, severity },
+      pastIncidents
+    );
+
+    const resolution = suggestResolution(type, severity);
 
     const incident = new Incident({
       ...incidentData,
       type,
       severity,
-      rootCause,
+      aiInsights: {
+        rootCause,
+        resolution,
+        similarIncidents
+      },
       aiProcessed: true
     });
 
@@ -30,6 +44,7 @@ export const createIncident = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 export const getAllIncidents = async (req, res) => {
   try {
@@ -56,11 +71,9 @@ export const getIncidentById = async (req, res) => {
 // UPDATE incident
 export const updateIncident = async (req, res) => {
   try {
-    const incident = await Incident.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    const incident = await Incident.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
     if (!incident) {
       return res.status(404).json({ message: "Incident not found" });
     }
