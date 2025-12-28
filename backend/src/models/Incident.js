@@ -16,15 +16,15 @@ const incidentSchema = new mongoose.Schema(
     // 🔹 Final category & severity (after AI + human validation)
     category: { type: String },
     severity: {
-  type: String,
-  enum: ["Low", "Medium", "High", "Critical"],
-  required: true
+      type: String,
+      enum: ["Low", "Medium", "High", "Critical"],
+      required: true,
     },
     type: {
-        type: String
+      type: String,
     },
     rootCause: {
-        type: String
+      type: String,
     },
 
     // 🔹 AI confidence score (0–100)
@@ -81,8 +81,7 @@ const incidentSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  },
-  
+  }
 );
 
 export default mongoose.model("Incident", incidentSchema);
