@@ -16,7 +16,10 @@ const IncidentList = () => {
   }, []);
 
   return (
+    
     <div style={{ padding: "20px" }}>
+        <a href="/create">+ Create Incident</a>
+
       <h1>AI Incident Dashboard</h1>
 
       {incidents.map((incident) => (
